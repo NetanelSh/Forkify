@@ -1,3 +1,5 @@
-import x from './test';
+import Search from './models/Search';
 
-console.log(x);
+const search = new Search('pizza');
+console.log(search);
+search.getResults();
