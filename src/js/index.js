@@ -2,6 +2,7 @@ import Search from './models/Search';
 import Recipe from './models/Recipe';
 
 import * as searchView from './views/searchView';
+import * as recipeView from './views/recipeView';
 
 import { elements, renderLoader, clearLoader } from './views/base';
 
@@ -27,13 +28,17 @@ const controlSearch = async () => {
         searchView.clearInput();
         searchView.clearResults();
         renderLoader(elements.searchRes);
-
-        // search for recipes
-        await state.search.getResults();
-    
-        // render UI with results
-        clearLoader();
-        searchView.renderResults(state.search.results);
+        try {
+            // search for recipes
+            await state.search.getResults();
+        
+            // render UI with results
+            clearLoader();
+            searchView.renderResults(state.search.results);
+        } catch (error) {
+            alert('Something wrong with the search...');
+            clearLoader();
+        }
     }
 }
 
@@ -60,19 +65,30 @@ const controlRecipe = async () => {
     if ( id ) {
 
         // prepare UI
+        recipeView.clearRecipe();
+        renderLoader(elements.recipe);
+
+        // Highlight selected search item
+        if (state.search) searchView.highlightSelected(id);
 
         // create recipe object
         state.recipe = new Recipe(id);
 
-        // get recipe data
-        await state.recipe.getRecipe();
-
-        // calculate servings and time
-        state.recipe.calcTime();
-        state.recipe.calcServings();
-
-        // render Recipe
-        console.log(state.recipe);
+        try {
+            // get recipe data
+            await state.recipe.getRecipe();
+            state.recipe.parseIngredients();
+    
+            // calculate servings and time
+            state.recipe.calcTime();
+            state.recipe.calcServings();
+    
+            // render Recipe
+            clearLoader();
+            recipeView.renderRecipe(state.recipe);
+        } catch (error) {
+            alert('Error processing recipe!');
+        }
     }
 }
 
