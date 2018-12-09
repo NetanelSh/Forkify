@@ -81,7 +81,7 @@ export const renderRecipe = recipe => {
             <ul class="recipe__ingredient-list">
                 ${recipe.ingredients.map(el => createIngredient(el)).join('')}
             </ul>
-            <button class="btn-small recipe__btn">
+            <button class="btn-small recipe__btn recipe__btn--add">
                 <svg class="search__icon">
                     <use href="img/icons.svg#icon-shopping-cart"></use>
                 </svg>
@@ -104,7 +104,7 @@ export const renderRecipe = recipe => {
     `;
 
     elements.recipe.insertAdjacentHTML('afterbegin', markup);
-}
+};
 
 export const updateServingsIngredients = recipe => {
     // Update servings
@@ -115,4 +115,4 @@ export const updateServingsIngredients = recipe => {
     countElements.forEach((el, i) => {
         el.textContent = formatCount(recipe.ingredients[i].count);
     });
-}
+};
